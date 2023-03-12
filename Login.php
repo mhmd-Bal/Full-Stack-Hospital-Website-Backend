@@ -9,7 +9,7 @@ use Firebase\JWT\Key;
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-$query = $mysqli->prepare('select id,name,email,usertype_id,password from users where email=?');
+$query = $mysqli->prepare('select id,user_name,email,usertype_id,password from users where email=?');
 $query->bind_param('s', $email);
 $query->execute();
 
@@ -27,7 +27,7 @@ if ($user_doesnt_exist == 0) {
 
         $key = "hospital_secret_key";
         $payload = [];
-        $payload['sub'] = $email;
+        $payload['sub'] = $id;
         $payload['name'] = $name;
         $payload['usertype'] = $usertype_id;
 

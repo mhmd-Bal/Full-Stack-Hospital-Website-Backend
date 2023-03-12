@@ -18,7 +18,7 @@ try {
   $decoded_array = (array) $decoded;
   $response['authentication'] = "Successful";
   $response['name'] = $decoded_array['name'];
-  $response['email'] = $decoded_array['sub'];
+  $response['userid'] = $decoded_array['sub'];
   $response['usertype'] = $decoded_array['usertype'];
 }catch (SignatureInvalidException $e){
   $response['authentication'] = "Failed";

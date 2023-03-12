@@ -19,7 +19,7 @@ $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 if($email_exists > 0){
   $response['status'] = "Failed: Email Already Exists!";
 }else{
-  $query = $mysqli -> prepare('insert into users(name, email, password, dob, usertype_id) values(?,?,?,?,1)');
+  $query = $mysqli -> prepare('insert into users(user_name, email, password, dob, usertype_id) values(?,?,?,?,2)');
   $query -> bind_param('ssss', $name, $email, $hashed_password, $dob);
   $query -> execute();
   $response['status'] = "User Added!";
