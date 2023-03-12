@@ -16,14 +16,14 @@ $response = [];
 try {
   $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
   $decoded_array = (array) $decoded;
-  $response['Authentication'] = "Successful";
+  $response['authentication'] = "Successful";
   $response['name'] = $decoded_array['name'];
   $response['email'] = $decoded_array['sub'];
   $response['usertype'] = $decoded_array['usertype'];
 }catch (SignatureInvalidException $e){
-  $response['Authentication'] = "Failed";
+  $response['authentication'] = "Failed";
 }catch (UnexpectedValueException $e){
-  $response['Authentication'] = "Failed";
+  $response['authentication'] = "There is no user logged in";
 }
 
 echo json_encode($response);
