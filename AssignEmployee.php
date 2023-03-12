@@ -31,17 +31,28 @@ if ($hospital_doesnt_exist == 0) {
   if($user_doesnt_exist == 0){
     $response['response'] = "User not found";
   }else{
-    if($usertype_id == 2){
-      $query = $mysqli->prepare('insert into hospital_users(hospital_id, user_id, is_active, date_joined, date_left) values(?, ?, ?, ?, ?)');
-      $query->bind_param('iiiss', $hospital_id, $user_id, $is_active, $date_joined, $date_left);
-      $query->execute();
-      $response['response'] = "Employee Assigned!";
-    }else {
-      $response['response'] = "The user is not an employee";
+    if($usertype_id == 1){
+      // Because he's a patient he can only be active in 1 hospital
+      $check_if_user_assigned = $mysqli->prepare('select is_active from hospital_users where user_id=? and hospital_id');
+      $check_if_user_assigned->bind_param('ii', $user_id, $hospital_id);
+      $check_if_user_assigned->execute();
+      $check_if_user_assigned->store_result();
+
+      $user_already_assigned = $check_if_user_assigned->num_rows();
+      if($user_already_assigned >= 1) {
+        $response['response'] = "The patient is already active in this hospital";
+      }else{
+        $query = $mysqli->prepare('insert into hospital_users(hospital_id, user_id, is_active, date_joined, date_left) values(?, ?, ?, ?, ?)');
+        $query->bind_param('iiiss', $hospital_id, $user_id, $is_active, $date_joined, $date_left);
+        $query->execute();
+        $response['response'] = "Patient Assigned!";
+      }
+
+    }else{
+      $response['response'] = "The user is not a patient";
     }
   }
 }
-
  
 echo json_encode($response);
 ?>
