@@ -35,7 +35,22 @@ if ($hospital_doesnt_exist == 0) {
     $response['response'] = "User not found";
   }else{
     if($usertype_id == 1){
+      // Because he's a patient he can only be active in 1 hospital
+      $check_if_user_assigned = $mysqli->prepare('select is_active from hospital_users where user_id=?');
+      $check_if_user_assigned->bind_param('i', $user_id);
+      $check_if_user_assigned->execute();
+      $check_if_user_assigned->store_result();
+      $check_if_user_assigned->bind_result($already_active);
+      $check_if_user_assigned->fetch();
 
+      $user_assigned = $check_if_user_assigned->num_rows();
+      if($user_assigned >= 1 && $already_active == 1) {
+        $response['response'] = "The patient is already active in a hospital";
+      }else{
+        $query = $mysqli->prepare('insert into hospital_users(hospital_id, user_id, is_active, date_joined, date_left) values(?, ?, ?, ?, ?)');
+        $query->bind_param('iiiss', $hospital_id, $user_id, $is_active, $date_joined, $date_left);
+        $query->execute();
+      }
 
     }else{
       $response['response'] = "The user is not a patient";
