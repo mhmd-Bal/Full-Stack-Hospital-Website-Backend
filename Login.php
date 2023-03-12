@@ -25,7 +25,7 @@ if ($user_doesnt_exist == 0) {
 } else {
     if (password_verify($password, $hashed_password)) {
 
-        $key = 'hospital_secret_key';
+        $key = "hospital_secret_key";
         $payload = [];
         $payload['sub'] = $email;
         $payload['name'] = $name;
