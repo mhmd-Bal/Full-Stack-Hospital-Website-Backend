@@ -3,9 +3,6 @@ include('connection.php');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
-
-
-
 $hospital_id = $_POST['hospital_id'];
 $user_id = $_POST['user_id'];
 $is_active = $_POST['is_active'];
@@ -23,7 +20,7 @@ $response = [];
 if ($hospital_doesnt_exist == 0) {
   $response['response'] = "Hospital not found";
 } else {
-  $check_user = $mysqli->prepare('select usertype_id from hospitals where id=?');
+  $check_user = $mysqli->prepare('select usertype_id from users where id=?');
   $check_user->bind_param('i', $user_id);
   $check_user->execute();
   $check_user->store_result();
@@ -50,6 +47,7 @@ if ($hospital_doesnt_exist == 0) {
         $query = $mysqli->prepare('insert into hospital_users(hospital_id, user_id, is_active, date_joined, date_left) values(?, ?, ?, ?, ?)');
         $query->bind_param('iiiss', $hospital_id, $user_id, $is_active, $date_joined, $date_left);
         $query->execute();
+        $response['response'] = "Patient Assigned!";
       }
 
     }else{
