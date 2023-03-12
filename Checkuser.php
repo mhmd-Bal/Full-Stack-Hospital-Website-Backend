@@ -2,6 +2,7 @@
 include('connection.php');
 require_once('jwt/src/JWT.php');
 require_once('jwt/src/Key.php');
+require_once('jwt/src/SignatureInvalidException.php');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 use Firebase\JWT\JWT;
@@ -11,14 +12,17 @@ $jwt = $_POST['token'];
 $key = "hospital_secret_key";
 $response = [];
 
-if(isset($jwt)){
+
+try {
   $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
   $decoded_array = (array) $decoded;
   $response['Authentication'] = "Successful";
   $response['name'] = $decoded_array['name'];
   $response['email'] = $decoded_array['sub'];
   $response['usertype'] = $decoded_array['usertype'];
-}else{
+}catch (SignatureInvalidException $e){
+  $response['Authentication'] = "Failed";
+}catch (UnexpectedValueException $e){
   $response['Authentication'] = "Failed";
 }
 
