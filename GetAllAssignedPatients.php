@@ -9,4 +9,12 @@ inner join hospitals on hospital_users.hospital_id = hospitals.id
 inner join users on hospital_users.user_id = users.id
 where users.usertype_id = 1
 ");
+$query -> execute();
+$result = $query->get_result();
 
+$patients_in_hospitals = [];
+while ($row = $result->fetch_assoc()){
+  $patients_in_hospitals[] = $row;
+}
+
+echo json_encode($patients_in_hospitals);
