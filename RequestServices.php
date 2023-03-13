@@ -8,7 +8,7 @@ $description = $_POST['description'];
 $cost = $_POST['cost'];
 $department_id = $_POST['department_id'];
 $employee_id = $_POST['employee_id'];
-$status = "Approved";
+$status = "Pending";
 
 $check_department = $mysqli->prepare('select id from departments where id=?');
 $check_department->bind_param('i', $department_id);
@@ -22,7 +22,7 @@ if ($department_doesnt_exist == 0) {
   $response['response'] = "Department not found";
 } else {
   $check_user = $mysqli->prepare('select usertype_id from users where id=?');
-  $check_user->bind_param('i', $patient_id);
+  $check_user->bind_param('i', $employee_id);
   $check_user->execute();
   $check_user->store_result();
   $check_user->bind_result($usertype_id);
@@ -32,13 +32,13 @@ if ($department_doesnt_exist == 0) {
   if($user_doesnt_exist == 0){
     $response['response'] = "User not found";
   }else{
-    if($usertype_id == 1){
+    if($usertype_id == 2){
       $query = $mysqli->prepare('insert into services(patient_id, employee_id, description, cost, department_id, status) values(?, ?, ?, ?, ?, ?)');
       $query->bind_param('iisiis', $patient_id, $employee_id, $description, $cost, $department_id, $status);
       $query->execute();
-      $response['response'] = "Service Assigned!";
+      $response['response'] = "Service has been requested!";
     }else{
-      $response['response'] = "The user is not a patient";
+      $response['response'] = "The user is not an employee";
     }
   }
 }
