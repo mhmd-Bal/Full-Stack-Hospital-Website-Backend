@@ -13,6 +13,17 @@ $check_email -> bind_param('s', $email);
 $check_email -> execute();
 $check_email -> store_result();
 $email_exists = $check_email->num_rows();
+$response = [];
+
+if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+  $response['status'] = "Email Not Valid";
+  exit();
+}
+
+if(strlen($password) < 8 ){
+  $response['status'] = "Password less than 8 characters";
+  exit();
+}
 
 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
