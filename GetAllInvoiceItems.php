@@ -6,7 +6,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 $user_id = $_POST['user_id'];
 $status = 'Approved';
 
-$check_medications = $mysqli->prepare("select medications.name, user_has_medications.quantity, medications.cost
+$check_medications = $mysqli->prepare("select medications.name, medications.cost
 from user_has_medications
 inner join users on user_has_medications.user_id = users.id
 inner join medications on user_has_medications.medication_id = medications.id
